@@ -1,24 +1,24 @@
-<? 
+<?php
   # header('Content-Type: text/xml');
   echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title><?= $tumblelog['title'] ?></title>
-    <link><?= $tumblelog['url'] ?></link>
-    <description><?= $tumblelog['description'] ?></description>
-    <atom:link href="<?= $tumblelog['feed-url'] ?>" rel="self" type="application/rss+xml" />
-<? foreach ($tumblelog['posts'] as $post): ?>
+    <title><?php echo($tumblelog['title']); ?></title>
+    <link><?php echo($tumblelog['url']); ?></link>
+    <description><?php echo($tumblelog['description']); ?></description>
+    <atom:link href="<?php echo($tumblelog['feed-url']); ?>" rel="self" type="application/rss+xml" />
+<?php foreach ($tumblelog['posts'] as $post): ?>
     <item>
-      <title><?= $post['title'] ?></title>
-      <description><![CDATA[ <?= $post['description'] ?> ]]></description>
-      <link><?= $post['link'] ?></link>
-<? foreach ($post['tags'] as $tag): ?>
-      <category><?= $tag ?></category>
-<? endforeach; ?>
-      <guid isPermaLink="false"><?= $post['title'] ?> <?= $post['published-at'] ?></guid>
-      <pubDate><?= date('r', $post['published-at']) ?></pubDate>
+      <title><?php echo($post['title']); ?></title>
+      <description><![CDATA[ <?php echo($post['description']); ?> ]]></description>
+      <link><?php echo($post['link']); ?></link>
+<?php foreach ($post['tags'] as $tag): ?>
+      <category><?php echo($tag); ?></category>
+<?php endforeach; ?>
+      <guid isPermaLink="false"><?php echo($post['title']); ?> <?php echo($post['published-at']); ?></guid>
+      <pubDate><?php echo(date('r', $post['published-at'])); ?></pubDate>
     </item>
-<? endforeach; ?>
+<?php endforeach; ?>
   </channel>
 </rss>
