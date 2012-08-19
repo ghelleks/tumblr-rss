@@ -2,10 +2,12 @@
 
 error_reporting(0);
 
-$username = $_GET['username'];
+#$username = $_GET['username'];
+$username = 'atechnologyjobisnoexcuse';
 $feed_filename = "cache/$username.rss";
-$expiration_time = 600; # seconds
+$expiration_time = 60 * 15; # 15 minutes in seconds
 
+$disable_markdown_in_posts = true;
 $use_cache = true;
 
 if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filename) < $expiration_time)) {
@@ -24,7 +26,10 @@ if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filen
 
   # check for a custom domain
   $stream_meta_data = stream_get_meta_data($fhandle);
-  $headers = implode("\n", $stream_meta_data['wrapper_data']['headers']);
+  $headers = '';
+  if (array_key_exists('headers', $stream_meta_data['wrapper_data'])) { 
+    $headers = implode("\n", $stream_meta_data['wrapper_data']['headers']); 
+  }
   // var_dump($stream_meta_data);die;
   if (strpos($headers, 'HTTP/1.1 301') === 0) {
     preg_match('/\nLocation: (.+)\n/', $headers, $matches);
@@ -62,6 +67,10 @@ if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filen
 
   foreach($tumblr_data->posts as $post_data) {
     $parsed = parse_post($post_data);
+
+    if ($disable_markdown_in_posts) {
+       $parsed['description'] = "<!--no-markdown-->\n" . $parsed['description'];
+    }
   
     $post = array(
       'title' => $parsed['title'],
@@ -75,7 +84,8 @@ if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filen
   }
 
   ob_start();
-  require_once 'template.rss.php';
-  file_put_contents($feed_filename, ob_get_contents());
-  ob_end_flush();
+  require_once('template.rss.php');
+  $contents = ob_get_clean();
+  file_put_contents($feed_filename, $contents);
+  echo $contents;
 }
