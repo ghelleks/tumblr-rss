@@ -31,13 +31,19 @@ function parse_post($post) {
 
     case 'photo':
       # $title = $post->{"$type-caption"};
+      # split caption into title and body, based on first newline.
+      $body = ''; $title = '';
+      list($title, $body) = explode("\n", $post->{"$type-caption"}, 2);
+      if (strlen($body) == 0) {
+         $body = $title;
+      }
 
       $photo = "<img src=\"{$post->{"$type-url-1280"}}\" alt=\"" . strip_tags($title) ."\">";
-      if ($post->{'photo-link-url'}) $photo = "<a href=\"{$post->{'photo-link-url'}}\">$photo</a>";
+      if (isset($post->{'photo-link-url'})) { $photo = "<a href=\"" . $post->{'photo-link-url'} . "\">$photo</a>"; }
         
       $description = "
         <p>$photo</p>
-        {$post->{"$type-caption"}}
+        {$body}
       ";
       break;
 
@@ -67,6 +73,8 @@ function parse_post($post) {
       $description = $post->{"$type-answer"};
       break;
 
+    default:
+      var_dump($post); die;
   }
 
   $title = trim(strip_tags($title));
