@@ -8,7 +8,7 @@ $feed_filename = "cache/$username.rss";
 $expiration_time = 60 * 15; # 15 minutes in seconds
 
 $disable_markdown_in_posts = true;
-$use_cache = false;
+$use_cache = true;
 
 if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filename) < $expiration_time)) {
   echo file_get_contents($feed_filename);
