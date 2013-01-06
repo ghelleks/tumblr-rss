@@ -13,6 +13,7 @@
       <title><?php echo($post['title']); ?></title>
       <description><![CDATA[ <?php echo($post['description']); ?> ]]></description>
       <link><?php echo($post['link']); ?></link>
+      <category>format-<?php echo $post['type']; ?></category>
 <?php foreach ($post['tags'] as $tag): ?>
       <category><?php echo($tag); ?></category>
 <?php endforeach; ?>

@@ -8,7 +8,7 @@ $feed_filename = "cache/$username.rss";
 $expiration_time = 60 * 15; # 15 minutes in seconds
 
 $disable_markdown_in_posts = true;
-$use_cache = true;
+$use_cache = false;
 
 if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filename) < $expiration_time)) {
   echo file_get_contents($feed_filename);
@@ -77,7 +77,8 @@ if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filen
       'description' => $parsed['description'],
       'link' => $parsed['link'],
       'published-at' => $post_data->{'unix-timestamp'},
-      'tags' => ($post_data->tags == NULL ? array() : $post_data->tags)
+      'tags' => ($post_data->tags == NULL ? array() : $post_data->tags),
+      'type' => $parsed['type']
     );
   
     $tumblelog['posts'][] = $post;

@@ -22,7 +22,7 @@ function parse_post($post) {
       break;
 
     case 'quote':
-      # $title = '"' . trim($post->{"$type-text"}) . '"';
+      $title = trim($post->{"$type-source"});
       $description = "
         <blockquote>{$post->{"$type-text"}}</blockquote>
         <p>&mdash; {$post->{"$type-source"}}</p>
@@ -34,9 +34,9 @@ function parse_post($post) {
       # split caption into title and body, based on first newline.
       $body = ''; $title = '';
       list($title, $body) = explode("\n", $post->{"$type-caption"}, 2);
-      if (strlen($body) == 0) {
-         $body = $title;
-      }
+      #if (strlen($body) == 0) {
+      #   $body = $title;
+      #}
 
       $photo = "<img src=\"{$post->{"$type-url-1280"}}\" alt=\"" . strip_tags($title) ."\">";
       if (isset($post->{'photo-link-url'})) { $photo = "<a href=\"" . $post->{'photo-link-url'} . "\">$photo</a>"; }
@@ -53,10 +53,13 @@ function parse_post($post) {
       break;
 
     case 'video':
-      # $title = $post->{"$type-caption"};
+      # split caption into title and body, based on first newline.
+      $body = ''; $title = '';
+      list($title, $body) = explode("\n", $post->{"$type-caption"}, 2);
+
       $description = "
         {$post->{"$type-player"}}
-        {$post->{"$type-caption"}}
+        {$body}
       ";
       break;
 
@@ -80,5 +83,5 @@ function parse_post($post) {
   $title = trim(strip_tags($title));
   # if ($title == NULL || strlen($title) == 0) $title = ucfirst($type);
   
-  return compact('title', 'description', 'link');
+  return compact('title', 'description', 'link', 'type');
 }
