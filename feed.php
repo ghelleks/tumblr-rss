@@ -8,7 +8,7 @@ $feed_filename = "cache/$username.rss";
 $expiration_time = 60 * 15; # 15 minutes in seconds
 
 $disable_markdown_in_posts = true;
-$use_cache = true;
+$use_cache = false;
 
 if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filename) < $expiration_time)) {
   echo file_get_contents($feed_filename);
@@ -19,7 +19,7 @@ if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filen
   if (file_exists($feed_filename)) touch($feed_filename);
   
   $domain = "http://$username.tumblr.com";
-  $api_url = '/api/read/json?num=10&debug=true';
+  $api_url = '/api/read/json?num=11&debug=true';
   
   $fhandle = fopen("{$domain}{$api_url}", 'rb');
   fread($fhandle, 1);
@@ -33,7 +33,7 @@ if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filen
   // var_dump($stream_meta_data);die;
   if (strpos($headers, 'HTTP/1.1 301') === 0) {
     preg_match('/\nLocation: (.+)\n/', $headers, $matches);
-    if (count($matches) >= 2) {
+    if (count($matches) > 1) {
       fclose($fhandle);
       $domain = str_replace($api_url, '', $matches[1]);
       $fhandle = fopen("{$domain}{$api_url}", 'rb');
@@ -50,7 +50,6 @@ if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filen
     $tumblr_data .= fread($fhandle, 8192);
   }
   fclose($fhandle);
-    
   $tumblr_data = json_decode($tumblr_data);
 
   date_default_timezone_set($tumblr_data->tumblelog->timezone);
@@ -69,7 +68,7 @@ if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filen
     $parsed = parse_post($post_data);
 
     if ($disable_markdown_in_posts) {
-       $parsed['description'] = "<!--no-markdown-->\n" . $parsed['description'];
+       $parsed['description'] = "<!--no-markdown-->\n\n" . $parsed['description'];
     }
   
     $post = array(

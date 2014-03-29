@@ -15,18 +15,12 @@ function parse_post($post) {
     case 'link':
       $title = $post->{"$type-text"};
       $link = $post->{"$type-url"};
-      $description = "
-        {$post->{"$type-description"}}
-        <p><a href=\"{$post->{'url-with-slug'}}\">#</a></p>
-      ";
+      $description = "{$post->{"$type-description"}}\n<p><a href=\"{$post->{'url-with-slug'}}\">#</a></p>";
       break;
 
     case 'quote':
       $title = trim($post->{"$type-source"});
-      $description = "
-        <blockquote>{$post->{"$type-text"}}</blockquote>
-        <p>&mdash; {$post->{"$type-source"}}</p>
-      ";
+      $description = "<blockquote>{$post->{"$type-text"}}</blockquote> <p>&mdash; {$post->{"$type-source"}}</p> ";
       break;
 
     case 'photo':
@@ -41,10 +35,7 @@ function parse_post($post) {
       $photo = "<img src=\"{$post->{"$type-url-1280"}}\" alt=\"" . strip_tags($title) ."\">";
       if (isset($post->{'photo-link-url'})) { $photo = "<a href=\"" . $post->{'photo-link-url'} . "\">$photo</a>"; }
         
-      $description = "
-        <p>$photo</p>
-        {$body}
-      ";
+      $description = "<p>$photo</p> {$body}";
       break;
 
     case 'conversation':
@@ -56,19 +47,12 @@ function parse_post($post) {
       # split caption into title and body, based on first newline.
       $body = ''; $title = '';
       list($title, $body) = explode("\n", $post->{"$type-caption"}, 2);
-
-      $description = "
-        {$post->{"$type-player"}}
-        {$body}
-      ";
+      $description = "{$post->{"$type-player"}}\n{$body}";
       break;
 
     case 'audio':
       $title = "{$post->{'id3-artist'}} - {$post->{'id3-title'}}";
-      $description = "
-        {$post->{'audio-player'}}
-        {$post->{"$type-caption"}}
-      "; # Stick it in your ear, heredoc
+      $description = "{$post->{'audio-player'}}\n{$post->{"$type-caption"}}"; # Stick it in your ear, heredoc
       break;
 
     case 'answer':
