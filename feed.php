@@ -1,5 +1,7 @@
 <?php
 
+ini_set('newrelic.appname', 'tumblr-rss')
+
 error_reporting(0);
 
 #$username = $_GET['username'];
