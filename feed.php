@@ -7,7 +7,7 @@ $username = 'atechnologyjobisnoexcuse';
 $feed_filename = "cache/$username.rss";
 $expiration_time = 60 * 15; # 15 minutes in seconds
 
-$disable_markdown_in_posts = true;
+$disable_markdown_in_posts = false;
 $use_cache = false;
 
 if ($use_cache && file_exists($feed_filename) && (time() - filemtime($feed_filename) < $expiration_time)) {
