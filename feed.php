@@ -1,6 +1,8 @@
 <?php
 
-ini_set('newrelic.appname', 'tumblr-rss')
+if (extension_loaded('newrelic')) {
+  newrelic_set_appname($_SERVER["HTTP_HOST"]);
+}
 
 error_reporting(0);
 
